@@ -25,6 +25,17 @@ import React from "react";
  */
 const AddDealToDB = async (values: NewDealFormSchemaType) => {
   try {
+
+
+    const userSession = await auth();
+
+    if (!userSession) {
+      return {
+        type: "error",
+        message: "User is not authenticated!!!",
+      };
+    }
+
     console.log("in add deal to firebase", values);
 
     const addedDeal = await prismaDB.deal.create({
@@ -50,6 +61,8 @@ const AddDealToDB = async (values: NewDealFormSchemaType) => {
     });
 
     revalidatePath(`/manual-deals`);
+
+    LogUserAction(userSession.user, "Added a deal", "Deal ID: " + dealId);
 
     return {
       type: "success",

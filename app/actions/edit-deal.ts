@@ -30,6 +30,16 @@ export default async function EditDealFromFirebase(
   dealId: string,
 ) {
   try {
+
+    const userSession = await auth();
+
+    if (!userSession) {
+      return {
+        type: "error",
+        message: "User is not authenticated!!!",
+      };
+    }
+
     await prismaDB.deal.update({
       where: {
         id: dealId,
@@ -55,6 +65,8 @@ export default async function EditDealFromFirebase(
     });
 
     revalidatePath(`/raw-deals/${dealId}`);
+
+    LogUserAction(userSession.user, "Edited a deal", "Deal ID: " + dealId);
 
     return {
       type: "success",

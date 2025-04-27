@@ -7,6 +7,8 @@ import prismaDB from "@/lib/prisma";
 import * as mammoth from "mammoth";
 import { screenDealSchema } from "@/lib/schemas";
 import { auth } from "@/auth";
+import { LogUserAction } from "@/prisma/mutations"
+import { User, UserRole } from "@prisma/client";
 
 const openai = createOpenAI({
   apiKey: process.env.AI_API_KEY,
@@ -78,7 +80,6 @@ export default async function screenDeal(formData: FormData) {
     const userSession = await auth();
 
     if (!userSession) {
-      console.log("user is not authenticated while trying to screen a deal");
       return {
         type: "error",
         message: "User is not authenticated!!!",
@@ -138,6 +139,8 @@ export default async function screenDeal(formData: FormData) {
     `,
       schema: screenDealSchema,
     });
+
+    LogUserAction(userSession.user, "Screened a deal", "Deal ID: " + dealId);
 
     return {
       type: "success",

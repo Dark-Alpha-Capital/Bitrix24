@@ -28,6 +28,9 @@ const blockAccount = async (userId: string) => {
 
     revalidatePath("/admin");
 
+
+    LogUserAction(session.user, "Blocked user", "User ID: " + userId);
+
     return {
       type: "success",
       message: "Account blocked successfully",

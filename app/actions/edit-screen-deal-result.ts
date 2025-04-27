@@ -64,6 +64,8 @@ const editScreenDealResult = async (
         revalidatePath(`/inferred-deals/${dealId}`);
     }
 
+    LogUserAction(session.user, "Edited screened deal", "Deal ID: " + dealId);
+
     return {
       type: "success",
       message: "",

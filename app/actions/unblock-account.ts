@@ -28,6 +28,9 @@ const unblockAccount = async (userId: string) => {
 
     revalidatePath("/admin");
 
+
+    LogUserAction(session.user, "Unblocked user", "User ID: " + userId);
+
     return {
       type: "success",
       message: "Account Unblocked successfully",

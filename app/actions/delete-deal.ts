@@ -32,6 +32,16 @@ import React from "react";
  */
 const DeleteDealFromDB = async (dealType: DealType, dealId: string) => {
   try {
+
+    const userSession = await auth();
+
+    if (!userSession) {
+      return {
+        type: "error",
+        message: "User is not authenticated!!!",
+      };
+    }
+
     await prismaDB.deal.delete({
       where: {
         id: dealId,
@@ -46,6 +56,9 @@ const DeleteDealFromDB = async (dealType: DealType, dealId: string) => {
       case "AI_INFERRED":
         revalidatePath("/inferred-deals");
     }
+
+
+    LogUserAction(userSession.user, "Deleted a deal", "Deal ID: " + dealId);
 
     return {
       type: "success",
