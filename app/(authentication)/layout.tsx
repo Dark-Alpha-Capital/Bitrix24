@@ -4,13 +4,18 @@ import { GeistSans } from "geist/font/sans";
 import "../globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import Image from "next/image";
-import { ThemeProvider } from "@/components/theme-provider";
-import { ClerkProvider } from "@clerk/nextjs";
+import { Geist_Mono } from "next/font/google";
 
 export const metadata: Metadata = {
   title: "Dark Alpha Capital Deal Sourcing Organization",
   description: "Sourcing and Scrape Deals with AI",
 };
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-geist-mono",
+});
 
 export default function RootLayout({
   children,
@@ -18,20 +23,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn(GeistSans.variable)}>
+    <html lang="en" className={cn(GeistSans.variable, geistMono.variable)}>
       <body className={`antialiased`}>
         <main>
-          <section className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-            <div className="relative">
-              <Image
-                src={"/background-texture.avif"}
-                alt="blue background wavy for authentication pages"
-                className="object-cover"
-                fill
-              />
-            </div>
-            <div>{children}</div>
-          </section>
+          <div>{children}</div>
         </main>
         <Toaster />
       </body>

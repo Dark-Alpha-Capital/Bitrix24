@@ -40,17 +40,17 @@ const BulkUploadDealsToDB = async (deals: TransformedDeal[]) => {
       data: deals.map((deal) => ({
         title: deal.dealCaption || null, // Title is optional in schema, use null as fallback
         dealCaption: deal.dealCaption || "", // Required in schema, use empty string as fallback
-        firstName: deal.firstName || null, // Optional in schema
-        lastName: deal.lastName || null, // Optional in schema
+        firstName: String(deal.firstName) || null, // Optional in schema
+        lastName: String(deal.lastName) || null, // Optional in schema
         email: deal.email || null, // Optional in schema
         linkedinUrl: deal.linkedinUrl || null, // Optional in schema
-        workPhone: deal.workPhone?.toString() || null, // Optional in schema
-        revenue: deal.revenue || 0, // Required in schema, use 0 as fallback
-        ebitda: deal.ebitda || 0, // Required in schema, use 0 as fallback
-        ebitdaMargin: deal.ebitdaMargin || 0, // Required in schema, use 0 as fallback
+        workPhone: String(deal.workPhone) || null, // Optional in schema
+        revenue: Number(deal.revenue) || 0,
+        ebitda: Number(deal.ebitda) || 0,
+        ebitdaMargin: Number(deal.ebitdaMargin) || 0,
         industry: deal.industry || "", // Required in schema, use empty string as fallback
         sourceWebsite: deal.sourceWebsite || "", // Required in schema, use empty string as fallback
-        companyLocation: deal.companyLocation || null, // Optional in schema
+        companyLocation: String(deal.companyLocation) || null, // Optional in schema
         brokerage: deal.brokerage || "", // Required in schema, use empty string as fallback
         dealType: DealType.MANUAL, // Fixed value, no fallback needed
         userId: userSession.user.id,
@@ -62,12 +62,6 @@ const BulkUploadDealsToDB = async (deals: TransformedDeal[]) => {
     };
   } catch (error) {
     console.error("Bulk upload error:", error);
-
-    if (error instanceof Error) {
-      return {
-        error: `Bulk upload failed: ${error.message || "Unknown error"}`,
-      };
-    }
 
     return {
       error: "Bulk upload failed due to a server error.",

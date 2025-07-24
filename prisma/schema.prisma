@@ -81,6 +81,7 @@ model Deal {
   user         User?          @relation(fields: [userId], references: [id])
   POC          POC[]
   DealDocument DealDocument[]
+  Employee     Employee[]
 }
 
 model DealDocument {
@@ -89,11 +90,10 @@ model DealDocument {
   title       String
   description String?
   category    DealDocumentCategory @default(OTHER)
-
-  deal        Deal     @relation(fields: [dealId], references: [id])
+  deal        Deal                 @relation(fields: [dealId], references: [id], onDelete: Cascade)
   documentUrl String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
 }
 
 enum DealDocumentCategory {
@@ -115,7 +115,7 @@ model POC {
   name      String
   workPhone String?
   email     String
-  Deal      Deal?   @relation(fields: [dealId], references: [id])
+  Deal      Deal?   @relation(fields: [dealId], references: [id], onDelete: Cascade)
   dealId    String?
 }
 
@@ -128,7 +128,7 @@ model SIM {
   fileType  String
   fileUrl   String
   dealId    String
-  deal      Deal      @relation(fields: [dealId], references: [id])
+  deal      Deal      @relation(fields: [dealId], references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -171,7 +171,7 @@ enum Status {
 model AiScreening {
   id          String    @id @default(cuid())
   dealId      String
-  deal        Deal      @relation(fields: [dealId], references: [id])
+  deal        Deal      @relation(fields: [dealId], references: [id], onDelete: Cascade)
   title       String
   explanation String
   score       Int?
@@ -195,4 +195,12 @@ model UserActionLog {
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Employee {
+  id   String @id @default(cuid())
+  name String
+
+  Deal   Deal?   @relation(fields: [dealId], references: [id])
+  dealId String?
 }
