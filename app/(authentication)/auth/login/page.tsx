@@ -18,7 +18,7 @@ const LoginPage = async () => {
   //   }
 
   return (
-    <div className="flex h-full items-center justify-center bg-gray-50">
+    <div className="flex h-full items-center justify-center">
       <div className="w-full max-w-md space-y-6 px-8 py-12">
         <h2 className="text-center">
           Welcome to Dark Alpha Deal Sourcing Organization

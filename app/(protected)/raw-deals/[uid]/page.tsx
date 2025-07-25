@@ -17,6 +17,8 @@ import {
   Plus,
   Upload,
   CheckCircle,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -130,10 +132,18 @@ export default async function ManualDealSpecificPage(props: {
         <Badge variant="secondary" className="mb-4">
           Manual Deal
         </Badge>
-        <h1 className="mb-4 text-4xl font-bold">{title}</h1>
-        <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-          {dealCaption}
-        </p>
+        <div className="mb-4 max-h-32 overflow-y-auto rounded-lg border border-border/50 bg-muted/30 p-4">
+          <p className="break-words">{title}</p>
+        </div>
+        {dealCaption && (
+          <div className="mx-auto max-w-4xl">
+            <div className="max-h-48 overflow-y-auto rounded-lg border border-border/50 bg-muted/30 p-4">
+              <p className="break-words text-sm leading-relaxed text-muted-foreground sm:text-base md:text-lg">
+                {dealCaption}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mb-8 flex flex-wrap justify-center gap-4">

@@ -12,7 +12,6 @@ const adminEmails = [
   "diligence@darkalphacapital.com",
   "da@darkalphacapital.com",
   "daigbe@gmail.com",
-  "ayan@darkalphacapital.com",
 ];
 
 declare module "next-auth" {
