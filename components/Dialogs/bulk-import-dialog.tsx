@@ -40,7 +40,13 @@ type SheetDeal = {
   Upload: "Y" | "N";
   UploadOnCRM: "Yes" | "No";
   "Company Location"?: string;
+  "Deal Status": string;
 };
+
+// I wish there was a prettier way to default Deal Status to unknown, but there isn't
+const defaultSheetDeals = {
+  "Deal Status": "Unknown"
+}
 
 export function BulkImportDialog() {
   const { toast } = useToast();
@@ -68,6 +74,7 @@ export function BulkImportDialog() {
     "Upload",
     "UploadOnCRM",
     "Company Location",
+    "Deal Status",
   ];
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -128,6 +135,7 @@ export function BulkImportDialog() {
 
   const transformDeals = (deals: SheetDeal[]): TransformedDeal[] => {
     return deals.map((deal) => ({
+      ...defaultSheetDeals,
       brokerage: deal["Brokerage"],
       firstName: deal["First Name"],
       lastName: deal["Last Name"],
@@ -141,6 +149,7 @@ export function BulkImportDialog() {
       industry: deal.Industry,
       sourceWebsite: deal["Source Website"],
       companyLocation: deal["Company Location"],
+      dealStatus: deal["Deal Status"]
     }));
   };
 
