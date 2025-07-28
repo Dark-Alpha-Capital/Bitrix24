@@ -41,6 +41,7 @@ type SheetDeal = {
   UploadOnCRM: "Yes" | "No";
   "Company Location"?: string;
   "Deal Status": string;
+  "Deal Link": string;
 };
 
 // I wish there was a prettier way to default Deal Status to unknown, but there isn't
@@ -75,6 +76,7 @@ export function BulkImportDialog() {
     "UploadOnCRM",
     "Company Location",
     "Deal Status",
+    "Deal Link",
   ];
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -149,7 +151,8 @@ export function BulkImportDialog() {
       industry: deal.Industry,
       sourceWebsite: deal["Source Website"],
       companyLocation: deal["Company Location"],
-      dealStatus: deal["Deal Status"]
+      dealStatus: deal["Deal Status"],
+      dealLink: deal["Deal Link"]
     }));
   };
 

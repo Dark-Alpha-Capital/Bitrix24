@@ -73,6 +73,7 @@ model Deal {
   SIM             SIM[]
   AiScreening     AiScreening[]
   status          Status        @default(UNKNOWN)
+  dealLink        String        @default("Unknown")
 
   bitrixId        String?
   bitrixCreatedAt DateTime?
