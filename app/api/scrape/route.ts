@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { addScraperResultsToDatabase } from "@/app/actions/add-scraper-database";
 import axios from "axios";
 import { createClient } from "redis";
 import { NextRequest, NextResponse } from "next/server";
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
 
   receivingWebsocket.onopen = () => {
     console.log("Connected to websocket");
-    receivingWebsocket.send(JSON.stringify({type: "register", userId: userId}));
+    receivingWebsocket.send(JSON.stringify({type: "register", userId: userId, websocketId: uuid()}));
   }
 
   try {
@@ -51,7 +52,11 @@ export async function POST(request: NextRequest) {
   receivingWebsocket.onmessage = (event) => {
     const result = JSON.parse(event.data);
     console.log("Result", result);
-    // upload to database
-    // if database fails, store on websocket for 5 minutes, then try again. If it fails 3 times in a row, wait 1 hour. If that fails 3 times, wait 1 day
+    try {
+      addResultsToDatabase(userId, result);
+      receivingWebsocket.close();
+    } catch (error) {
+      receivingWebsocket.send(JSON.stringify({type: "status", status: "failure"}));
+    }
   }
 }

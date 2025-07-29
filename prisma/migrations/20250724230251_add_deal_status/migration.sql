@@ -3,4 +3,3 @@ CREATE TYPE "Status" AS ENUM ('OPEN', 'UNKNOWN', 'SOLD', 'INACTIVE', 'OFF_MARKET
 
 -- AlterTable
 ALTER TABLE "Deal" ADD COLUMN     "status" "Status" NOT NULL DEFAULT 'UNKNOWN';
-ALTER TABLE "Deal" ADD COLUMN     "dealLink" "String" NOT NULL DEFAULT 'Unknown';
