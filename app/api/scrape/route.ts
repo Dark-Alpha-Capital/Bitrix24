@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
   receivingWebsocket.onopen = () => {
     console.log("Connected to websocket");
-    receivingWebsocket.send(JSON.stringify({type: "register", userId: userId, websocketId: uuid()}));
+    receivingWebsocket.send(JSON.stringify({type: "register", userId: userId, websocketId: uuidv4()}));
   }
 
   try {
@@ -59,4 +59,15 @@ export async function POST(request: NextRequest) {
       receivingWebsocket.send(JSON.stringify({type: "status", status: "failure"}));
     }
   }
+
+  receivingWebsocket.onclose = (event) => {
+    console.log("Websocket closed")
+  }
+
+
+  return NextResponse.json(
+    {
+      type: "success",
+    }
+  );
 }
