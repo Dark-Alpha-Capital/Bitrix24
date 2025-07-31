@@ -11,7 +11,7 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { revalidatePath } from "next/cache";
 import React from "react";
 
-const addScraperResultsToDatabase = withAuthServerAction(
+export const addScraperResultsToDatabase = withAuthServerAction(
   async (userId, values) => {
     try {
       const addedDeal = await prismaDB.deal.create({
