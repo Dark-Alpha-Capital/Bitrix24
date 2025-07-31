@@ -1,73 +1,24 @@
-import { auth } from "@/auth";
-import { addScraperResultsToDatabase } from "@/app/actions/add-scraper-database";
-import axios from "axios";
-import { createClient } from "redis";
-import { NextRequest, NextResponse } from "next/server";
-import {v4 as uuidv4} from 'uuid';
+import { redisClient } from "@/lib/redis";
+import { NextResponse } from "next/server";
 
-const redisClient = createClient({
-  url: process.env.REDIS_CLIENT_URL,
-});
+export async function POST(request: Request) {
+  const target = await request.json();
 
-export async function POST(request: NextRequest) {
-  const userSession = await auth();
+  console.log("URL:", target.url, "FirmName:", target.firmName);
+  await redisClient.connect();
 
   try {
-    await redisClient.connect();
+    const fullTarget = {
+      ...target,
+      userId: 42,
+    };
+    await redisClient.lPush("submissions", JSON.stringify(fullTarget));
   } catch (error) {
-    console.error("Error connecting to Redis:", error);
-    return NextResponse.json(
-      { error: "Failed to connect to Redis" },
-      { status: 500 }
-    );
+    console.error("Error pushing to Redis", error);
+    return NextResponse.json({message: "Error pushing to Redis"});
   }
 
-  // connect to a websocket, this will remain open until the request is finished
-  const receivingWebsocket = new WebSocket("ws://localhost:8080");
-
-  // send data to Redis, so it can be parsed
-  const formData = await request.formData();
-  const url = formData.get("url");
-  const firmName = formData.get("firmName");
-  const userId = formData.get("userId");
-
-  receivingWebsocket.onopen = () => {
-    console.log("Connected to websocket");
-    receivingWebsocket.send(JSON.stringify({type: "register", userId: userId, websocketId: uuidv4()}));
-  }
-
-  try {
-    await redisClient.lPush(
-      "submissions",
-      JSON.stringify({ url, userId, firmName })
-    );
-  } catch (error) {
-    console.error("Error pushing to Redis:", error);
-    return NextResponse.json(
-      { error: "Error pushing to Redis"},
-      {status: 500}
-    );
-  }
-
-  receivingWebsocket.onmessage = (event) => {
-    const result = JSON.parse(event.data);
-    console.log("Result", result);
-    try {
-      addResultsToDatabase(userId, result);
-      receivingWebsocket.close();
-    } catch (error) {
-      receivingWebsocket.send(JSON.stringify({type: "status", status: "failure"}));
-    }
-  }
-
-  receivingWebsocket.onclose = (event) => {
-    console.log("Websocket closed")
-  }
-
-
-  return NextResponse.json(
-    {
-      type: "success",
-    }
-  );
+  return NextResponse.json({
+    message: "Scraping task successfully pushed on to the backend",
+  });
 }
