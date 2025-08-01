@@ -1,7 +1,6 @@
 "use client"
 
 import { auth } from "@/auth";
-import { addScraperResultsToDatabase } from "@/app/actions/add-scraper-database";
 import axios from "axios";
 import React, { useEffect, useState, useTransition, use } from "react";
 
@@ -33,8 +32,6 @@ const Page = ({ params, searchParams }) => {
 
       if (result.type === "problem_done") {
         console.log("Problem done", result);
-
-        addScraperResultsToDatabase(result);
       }
     };
 
